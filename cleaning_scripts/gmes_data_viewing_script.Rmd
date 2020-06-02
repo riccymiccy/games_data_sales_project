@@ -22,19 +22,55 @@ sales_2016 <- read_csv("raw_data/sales-2016-with-ratings.csv")
 sales_2016
 ```
 
+```{r}
+names(sales_2016)
+```
+
+I wanted to check all the variable names. They are in capitals so I want to lose the capitals so I will use the clean_names function from janitor package:
+
+```{r}
+sales_clean_2016 <- clean_names(sales_2016)
+```
+
+```{r}
+glimpse(sales_clean_2016)
+```
+
+O want to check for missing variables and n/a so I do this through summary function.
+
+```{r}
+summary(sales_clean_2016)
+```
+
+Things I note from the summary:
+
+year_of_release is character class which is odd. Is it a relevant variable to answer the questions? I think for plotting time series that it could be so I would want to change the year to an integer.
+
+na_sales is North American sales
+eu_sales is European
+jp_sales is Japan
+other_sales is rest of world
+global_sales is the sum of all the others
 
 
 
+```{r}
+sales_clean_2016 %>% 
+  ggplot(aes(x = name, y = global_sales)) +
+  geom_point()
+```
 
+So it would appear that there is one outlier that done much better than the rest.
+Let's try and find out who that is:
 
+```{r}
+sales_clean_2016 %>% 
+  arrange(desc(global_sales))
+```
 
-
-
-
-
-
-
-
+```{r}
+boxplot(sales_clean_2016$global_sales)
+```
 
 
 
