@@ -72,8 +72,17 @@ sales_clean_2016 %>%
 boxplot(sales_clean_2016$global_sales)
 ```
 
+```{r}
+sales_2019 <- read_csv("raw_data/sales-2019.csv")
+```
 
+```{r}
+sales_clean_2019 <- clean_names(sales_2019)
+```
 
+```{r}
+sales_clean_2019
+```
 
 
 
