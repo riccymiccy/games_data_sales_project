@@ -84,11 +84,82 @@ sales_clean_2019 <- clean_names(sales_2019)
 sales_clean_2019
 ```
 
+```{r}
+view(sales_clean_2016)
+```
+
+```{r}
+view(sales_clean_2019)
+```
+
+```{r}
+boxplot(sales_clean_2019$global_sales)
+```
+
+```{r}
+names(sales_clean_2016)
+```
+
+```{r}
+names(sales_clean_2019)
+```
+
+```{r}
+sales_clean_2016 %>% 
+  select(critic_score) %>% 
+  arrange(desc(critic_score))
+```
+
+```{r}
+sales_clean_2019 %>% 
+  select(critic_score) %>% 
+  arrange(desc(critic_score))
+```
+
+```{r}
+sales_clean_2016 %>% 
+  distinct(rating)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  distinct(esrb_rating)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  distinct(vg_chartz_score)
+```
 
 
 
+Now I am going to confirm which variable heading in 2016 is what in 2019:
 
+2016 vs 2019
+Name is Name and basename in 2019 looks like a cleaned version of name
+Platform is platform
+Year of release is year
+genre is genre
+publisher is publisher
+na-sales is na_sales
+jp_sales is jp_sales
+eu_sales is separate; pal_sales is Asia, Africa, Europe, South America and Oceania
+Therefore other_sales in 2016 doesn't match other_sales in 2019
+global_sales is global_sales
+critic_score numbers 84 to 100 in 2016
+critic_score nubers 8.6 to 10 in 2019 (so I will divide that figure in 2016 by 10 to compare)
+critic_count and user_count appear to be the number of critics and users who have been asked to derive the average review score so I am going to pull them out of the data
+developer is developer
+I googled the games rating and this is reference to age appropriateness:
+https://en.wikipedia.org/wiki/Entertainment_Software_Rating_Board
+E = Everyone
+M = Mature 17+
+T = Teen 13+
+E10+ = everyone ten years old and older
+K-A = Kids to adults - later renamed everyone
+AO = adults only 18+
+EC = early childhood
+RP = Rating pending
 
-
-
+In 2019 this is callied esrb_rating and KA can also be changed to E
 
