@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+sales_full <- read_csv("sales_full_cleaned.csv")
+```
+
+```{r}
+sales_full
+```
+
+
+```{r}
+sales_global <- sales_full %>% 
+  filter(sales_m > 0)
+
+sales_global
+
+```
+
+```{r}
+sales_shipped <- sales_full %>% 
+  filter(total_shipped > 0)
+
+sales_shipped
+```
+
+```{r}
+sales_full %>% 
+  arrange(year)
+```
+
+```{r}
+#sales_global %>% 
+  ggplot(aes(x = ))
+```
+
+```{r}
+sales_global_200 <- sales_global %>%
+  arrange_(~ desc(sales_m)) %>%
+  slice(1:200)
+
+sales_global_200
+```
+
+```{r}
+sales_shipped_200 <- sales_shipped %>%
+  arrange_(~ desc(total_shipped)) %>%
+  slice(1:200)
+```
+
+Sales Shipped is 2019 information
+
+I will proceed on this basis in the short term and try to produce some insights as I am running out of time.
+
+```{r}
+view(sales_shipped_200)
+```
+
+
+```{r}
+sales_shipped_200 %>% 
+  group_by(genre) %>% 
+  ggplot(aes(x = genre, fill = genre) ) +
+  geom_bar()
+
+ggsave("genre_count.png")
+```
+
+```{r}
+sales_shipped_200 %>% 
+  group_by(publisher) %>% 
+  ggplot(aes(x = genre, fill = publisher) ) +
+  geom_bar()
+```
+
+```{r}
+sales_shipped_200 %>% 
+  group_by(developer) %>% 
+  ggplot(aes(x = genre, fill = developer) ) +
+  geom_bar()
+```
+
+```{r}
+sales_shipped_200 %>% 
+  ggplot(aes(x = total_shipped, y = critic_score), color = scale_fill_brewer()) +
+  geom_point()
+```
+
+```{r}
+view(sales_global_200)
+```
+
+
+```{r}
+sales_global_200 %>%
+  ggplot(aes(x = sales_m, y = sales_geo)) +
+  geom_line()
+  
+```
+
+
+
+
+
+
+

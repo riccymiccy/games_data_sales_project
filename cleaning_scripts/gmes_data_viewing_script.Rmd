@@ -82,6 +82,13 @@ sales_clean_2019 <- clean_names(sales_2019)
 
 ```{r}
 sales_clean_2019 %>% 
+  ggplot(aes(x = name, y = global_sales)) +
+  geom_point()
+```
+
+
+```{r}
+sales_clean_2019 %>% 
   summary()
 ```
 
@@ -274,7 +281,7 @@ sales_clean_2019 %>%
 
 
 ```{r}
-sales_miss <- sales_clean_2019 %>% 
+#sales_miss <- sales_clean_2019 %>% 
   filter(na_sales == 0) %>% 
   mutate("missing_sales", (global_sales - na_sales - pal_sales - jp_sales - other_sales)) %>% 
 
@@ -372,7 +379,7 @@ summary(sales_clean_2019)
 
 
 ```{r}
-sales_clean_2019 <- sales_clean_2019 %>% 
+sales_clean_2019_sec <- sales_clean_2019 %>% 
   select(-basename) %>% 
   select(-vg_chartz_score) %>% 
   select(-url) %>% 
@@ -380,22 +387,14 @@ sales_clean_2019 <- sales_clean_2019 %>%
   select(-img_url)
   
 
-summary(sales_clean_2019)
+summary(sales_clean_2019_sec)
 ```
 
-```{r}
-sales_clean_2019 <- sales_clean_2019 %>% 
-  select(-esrb_rating)
 
-```
-
-```{r}
-summary(sales_clean_2019)
-```
 
 ```{r}
 #sales_2019_terr <- sales_clean_2019 %>% 
-  mutate("total_shipped_2019", total_shipped) %>% 
+ # mutate("total_shipped_2019", total_shipped) %>% 
   mutate("global_sales_2019", global_sales) %>% 
   mutate("na_sales_2019", na_sales) %>%
   mutate("eu_sales_2019", pal_sales) %>%
@@ -411,7 +410,7 @@ sales_clean_2019
 
 
 ```{r}
-sales_2019_conf <- sales_clean_2019 %>% 
+#sales_2019_conf <- sales_clean_2019 %>% 
   select(-)
 
 sales_2019_conf
@@ -421,20 +420,35 @@ sales_2019_conf
 sales_clean_2016
 ```
 
+```{r}
+summary(sales_clean_2016)
+```
 
 
 ```{r}
 sales_2016_conf <- sales_clean_2016 %>% 
   select(-year_of_release) %>% 
   select(-critic_count) %>% 
-  select(-user_count)
+  select(-user_count) %>% 
+  select(-rating)
 
 sales_2016_conf
 ```
 
+```{r}
+
+```
+
 
 ```{r}
-sales_2016_conf <- sales_2016_conf %>% 
+sales_clean_2016_sec <- sales_2016_conf %>%
+  select(-user_score)
+```
+
+
+
+```{r}
+#sales_2016_conf <- sales_2016_conf %>% 
   select(-as.numeric("year_of_release"))
 
 sales_2016_conf
@@ -442,22 +456,85 @@ sales_2016_conf
 
 Do a full join:
 
+still need to get rid of pal_sales and make it eu_sales
+
 ```{r}
-sales_full <- full_join(sales_2019_conf, sales_2016_conf, by = "name")
+sales_full <- full_join(sales_clean_2019_sec, sales_clean_2016_sec)
 
 sales_full
 ```
 
+```{r}
+#sales_2016_user <- sales_2016_conf %>% 
+  select(-user_score)
+
+```
 
 
 
+```{r}
+#sales_2016_user %>% 
+  select(-rating)
+```
+
+```{r}
+#sales_2019_conf
+```
+
+```{r}
+view(sales_full)
+```
+
+```{r}
+sales_full %>% 
+  filter(global_sales > 0) %>%
+  select(total_shipped)
+```
+
+```{r}
+sales_full
+```
 
 
+```{r}
+mutate_all(sales_full, "global_shipped" = "total_shipped" + "global_sales")
+```
+
+```{r}
+mutate(sales_full, global_shipped = (total_shipped + global_sales))
+```
+
+```{r}
+mutate(sales_full, "global_shipped", total_shipped + global_sales)
+```
+
+```{r}
+mutate(sales_full, "global_shipped", (total_shipped + global_sales))
+```
+
+```{r}
+sales_full
+```
+
+```{r}
+here()
+```
+```{r}
+view(sales_full)
+```
 
 
+```{r}
+sales_full_longer <- sales_full %>% 
+  pivot_longer(cols = c("global_sales", "na_sales", "pal_sales", "jp_sales", "other_sales"),
+               names_to = "sales_geo",
+               values_to = "sales_m")
+```
 
 
-
+```{r}
+write.csv(sales_full_longer, "sales_full_cleaned.csv")
+```
 
 
 
