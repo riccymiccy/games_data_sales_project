@@ -81,6 +81,12 @@ sales_clean_2019 <- clean_names(sales_2019)
 ```
 
 ```{r}
+sales_clean_2019 %>% 
+  summary()
+```
+
+
+```{r}
 sales_clean_2019
 ```
 
@@ -131,23 +137,168 @@ sales_clean_2019 %>%
   distinct(vg_chartz_score)
 ```
 
+```{r}
+sales_clean_2019 %>% 
+  filter(total_shipped > 0) %>% 
+  count(global_sales) 
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(total_shipped > 0) %>% 
+  count(na_sales) 
+```
+
+
+```{r}
+sales_clean_2019 %>% 
+  filter(total_shipped > 0) %>% 
+  count(pal_sales) 
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(total_shipped > 0) %>% 
+  count(jp_sales) 
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(total_shipped > 0) %>% 
+  count(other_sales)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(global_sales > 0) %>%
+  select(global_sales, na_sales, pal_sales, jp_sales, other_sales) %>% 
+  summary
+```
+
+```{r}
+?sum
+```
+
+
+```{r}
+global_sales_tot <- sales_clean_2019 %>% 
+  filter(global_sales > 0) %>% 
+  select(global_sales) %>% 
+  sum()
+global_sales_tot
+```
+
+```{r}
+na_sales_tot <- sales_clean_2019 %>% 
+  filter(na_sales > 0) %>% 
+  select(na_sales) %>% 
+  sum()
+na_sales_tot
+```
+
+```{r}
+pal_sales_tot <- sales_clean_2019 %>% 
+  filter(pal_sales > 0) %>% 
+  select(pal_sales) %>% 
+  sum()
+pal_sales_tot
+```
+
+```{r}
+jp_sales_tot <- sales_clean_2019 %>% 
+  filter(jp_sales > 0) %>% 
+  select(jp_sales) %>% 
+  sum()
+jp_sales_tot
+```
+
+```{r}
+other_sales_tot <- sales_clean_2019 %>% 
+  filter(other_sales > 0) %>% 
+  select(other_sales) %>% 
+  sum()
+other_sales_tot
+```
+
+```{r}
+global_sales_tot - (jp_sales_tot + na_sales_tot + other_sales_tot + pal_sales_tot)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(last_update > 0) %>% 
+  distinct(last_update)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  distinct(status)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(vgchartzscore > 0) %>% 
+  select(critic_score, user_score, vgchartzscore)
+```
+
+```{r}
+sales_clean_2019 %>% 
+  filter(global_sales == 0) %>% 
+  select(na_sales, pal_sales, jp_sales, other_sales)
+```
+```{r}
+sales_clean_2019
+```
+
+
+
+
+
+
+```{r}
+
+```
+
+```{r}
+sales_clean_2019 %>% 
+  distinct(esrb_rating)
+```
+
+
+```{r}
+##sales_clean_2019 <- sales_clean_2019 %>% 
+ # mutate("e", esrb_rating = "ka")
+```
+
+
+
+
+```{r}
+sales_miss <- sales_clean_2019 %>% 
+  filter(na_sales == 0) %>% 
+  mutate("missing_sales", (global_sales - na_sales - pal_sales - jp_sales - other_sales)) %>% 
+
+sales_miss
+```
+
 
 
 Now I am going to confirm which variable heading in 2016 is what in 2019:
 
 2016 vs 2019
+rank only in 2019
 Name is Name and basename in 2019 looks like a cleaned version of name
 Platform is platform
-Year of release is year
+Year of release is year ut year of release is a character and I can't work out how to turn it into a numer so I think we should exclude this variable
 genre is genre
 publisher is publisher
 na-sales is na_sales
 jp_sales is jp_sales
-eu_sales is separate; pal_sales is Asia, Africa, Europe, South America and Oceania
+eu_sales is separate; pal_sales is Asia, Africa, Europe, South America and Oceania according to google but according to the data dictionary is=t is EU sales
 Therefore other_sales in 2016 doesn't match other_sales in 2019
 global_sales is global_sales
 critic_score numbers 84 to 100 in 2016
-critic_score nubers 8.6 to 10 in 2019 (so I will divide that figure in 2016 by 10 to compare)
+critic_score numbers 8.6 to 10 in 2019 (so I will divide that figure in 2016 by 10 to compare)
 critic_count and user_count appear to be the number of critics and users who have been asked to derive the average review score so I am going to pull them out of the data
 developer is developer
 I googled the games rating and this is reference to age appropriateness:
@@ -162,4 +313,159 @@ EC = early childhood
 RP = Rating pending
 
 In 2019 this is callied esrb_rating and KA can also be changed to E
+
+Also included in 2019 data is vg_chartz_score which has no variables so that can excluded from the cleaned dataset
+Total shipped which appears instead of global sales and has no other split
+
+Unfortunately there are missing variables for all geographic areas but the margin of difference is 4.67m so I am going to create a mutate function to highlight which ones have a missing variable and see if they can be added together
+
+Last_update is an interesting piece of information because it indicates an update since the last dataset and also that there is some longevity to the original release. I am inclined to keep this variable even though there are several with no figure. The reason for this is that I have a theory that the ones with updates are likely to be big sellers.
+
+I will exclude the url column because it's not relevant for this piece of analysis
+There is inly one status of '1' so I will be removing that.
+I need to make the year into a number as integer or numeric (will check)
+It's not clear why there wasn't vgchartz variables on the 2016 dataset because it was launched some time before then.
+https://en.wikipedia.org/wiki/VGChartz
+
+I will exclude the img irl variable.
+
+I am going to make the year in 2016 data a number:
+
+```{r}
+sales_clean_2016 <- sales_clean_2016 %>% 
+  as.numeric("year_of_release")
+```
+
+That doesn't seem to work. It does now.
+
+```{r}
+summary(sales_clean_2016)
+```
+
+
+
+
+
+
+Let's make all variables lower case
+```{r}
+#sales_clean_2016 <- sales_clean_2016 %>% 
+ # mutate_all(.funs = tolower)
+#head(sales_clean_2016)
+```
+
+```{r}
+#sales_clean_2019 <- sales_clean_2019 %>% 
+ # mutate_all(.funs = tolower)
+#head(sales_clean_2019)
+```
+
+I want to fill in missing sales volumes
+I am going to exclude basename from 2019 results
+I am going to change critic_score in 2016 to critic_score_2016 and do the same for 2019
+I am going to change pal_sales in 2019 to eu_sales_2019 and add the year to 
+
+```{r}
+summary(sales_clean_2019)
+```
+
+
+
+```{r}
+sales_clean_2019 <- sales_clean_2019 %>% 
+  select(-basename) %>% 
+  select(-vg_chartz_score) %>% 
+  select(-url) %>% 
+  select(-status) %>% 
+  select(-img_url)
+  
+
+summary(sales_clean_2019)
+```
+
+```{r}
+sales_clean_2019 <- sales_clean_2019 %>% 
+  select(-esrb_rating)
+
+```
+
+```{r}
+summary(sales_clean_2019)
+```
+
+```{r}
+#sales_2019_terr <- sales_clean_2019 %>% 
+  mutate("total_shipped_2019", total_shipped) %>% 
+  mutate("global_sales_2019", global_sales) %>% 
+  mutate("na_sales_2019", na_sales) %>%
+  mutate("eu_sales_2019", pal_sales) %>%
+  mutate("jp_sales_2019", jp_sales) %>% 
+  mutate("other_sales_2019", other_sales)
+
+sales_2019_terr
+```
+
+```{r}
+sales_clean_2019
+```
+
+
+```{r}
+sales_2019_conf <- sales_clean_2019 %>% 
+  select(-)
+
+sales_2019_conf
+```
+
+```{r}
+sales_clean_2016
+```
+
+
+
+```{r}
+sales_2016_conf <- sales_clean_2016 %>% 
+  select(-year_of_release) %>% 
+  select(-critic_count) %>% 
+  select(-user_count)
+
+sales_2016_conf
+```
+
+
+```{r}
+sales_2016_conf <- sales_2016_conf %>% 
+  select(-as.numeric("year_of_release"))
+
+sales_2016_conf
+```
+
+Do a full join:
+
+```{r}
+sales_full <- full_join(sales_2019_conf, sales_2016_conf, by = "name")
+
+sales_full
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
