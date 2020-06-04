@@ -79,6 +79,8 @@ sales_shipped_200 %>%
   group_by(publisher) %>% 
   ggplot(aes(x = genre, fill = publisher) ) +
   geom_bar()
+
+ggsave("genre_publisher_count.png")
 ```
 
 ```{r}
@@ -86,13 +88,27 @@ sales_shipped_200 %>%
   group_by(developer) %>% 
   ggplot(aes(x = genre, fill = developer) ) +
   geom_bar()
+
+ggsave("genre_developer.png")
 ```
 
 ```{r}
 sales_shipped_200 %>% 
   ggplot(aes(x = total_shipped, y = critic_score), color = scale_fill_brewer()) +
   geom_point()
+
+ggsave("critic_score_sales.png")
 ```
+
+```{r}
+sales_shipped_200 %>% 
+  ggplot(aes(x = total_shipped, y = genre), colour = publisher) +
+  geom_point()
+
+ggsave("sales_genre.png")
+  
+```
+
 
 ```{r}
 view(sales_global_200)
@@ -104,6 +120,7 @@ sales_global_200 %>%
   ggplot(aes(x = sales_m, y = sales_geo)) +
   geom_line()
   
+ggsave("geo_split.png")
 ```
 
 

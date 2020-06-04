@@ -10,6 +10,24 @@ library(here)
 ```
 
 ```{r}
+sales_clean_2019
+```
+
+```{r}
+here()
+```
+
+
+```{r}
+sales_clean_2019 %>% 
+  ggplot(aes(x = name, y = total_shipped)) +
+  geom_point()
+
+ggsave("noise.png")
+```
+
+
+```{r}
 here()
 ```
 
@@ -81,9 +99,16 @@ sales_clean_2019 <- clean_names(sales_2019)
 ```
 
 ```{r}
+sales_clean_2019
+```
+
+
+```{r}
 sales_clean_2019 %>% 
-  ggplot(aes(x = name, y = global_sales)) +
+  ggplot(aes(x = name, y = total_shipped)) +
   geom_point()
+
+ggsave("sound_of_success")
 ```
 
 
