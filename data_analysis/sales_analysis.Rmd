@@ -39,7 +39,7 @@ sales_full %>%
 
 ```{r}
 #sales_global %>% 
-  ggplot(aes(x = ))
+  #ggplot(aes(x = ))
 ```
 
 ```{r}
@@ -69,7 +69,12 @@ view(sales_shipped_200)
 sales_shipped_200 %>% 
   group_by(genre) %>% 
   ggplot(aes(x = genre, fill = genre) ) +
-  geom_bar()
+  geom_bar() +
+  labs(title = "Games count by genre") +
+  labs(x = "Genre") +
+  labs(y = "Number of Games") +
+  labs(fill = "Genre") +
+  coord_flip()
 
 ggsave("genre_count.png")
 ```
@@ -78,7 +83,12 @@ ggsave("genre_count.png")
 sales_shipped_200 %>% 
   group_by(publisher) %>% 
   ggplot(aes(x = genre, fill = publisher) ) +
-  geom_bar()
+  geom_bar() +
+  labs(title = "Games count by publisher and genre") +
+  labs(x = "Genre") +
+  labs(y = "Number of Games") +
+  labs(fill = "Publisher") +
+  coord_flip()
 
 ggsave("genre_publisher_count.png")
 ```
@@ -87,7 +97,12 @@ ggsave("genre_publisher_count.png")
 sales_shipped_200 %>% 
   group_by(developer) %>% 
   ggplot(aes(x = genre, fill = developer) ) +
-  geom_bar()
+  geom_bar() +
+  labs(title = "Games count by developer and genre") +
+  labs(x = "Genre") +
+  labs(y = "Number of Games") +
+  labs(fill = "Developer") +
+  coord_flip()
 
 ggsave("genre_developer.png")
 ```
@@ -95,7 +110,10 @@ ggsave("genre_developer.png")
 ```{r}
 sales_shipped_200 %>% 
   ggplot(aes(x = total_shipped, y = critic_score), color = scale_fill_brewer()) +
-  geom_point()
+  geom_point() +
+  labs(title = "Shipped vs Critic Score") +
+  labs(x = "Total Shipped") +
+  labs(y = "Critic Score")
 
 ggsave("critic_score_sales.png")
 ```
@@ -118,7 +136,10 @@ view(sales_global_200)
 ```{r}
 sales_global_200 %>%
   ggplot(aes(x = sales_m, y = sales_geo)) +
-  geom_line()
+  geom_line() +
+  labs(title = "Geographic breakdown of Global Sales") +
+  labs(x = "Sales (millions)") +
+  labs(y = "Specific Global Market")
   
 ggsave("geo_split.png")
 ```
